@@ -1,21 +1,31 @@
 function statement(invoice) {
-    let totalAmount = 0;
-    let volumeCredits = 0;
     let result = `청구 내역 (고객명: ${invoice.customer})\n`
 
     for (let perf of invoice.performances) {
 
-
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)}\n`
-        totalAmount += amountFor(perf);
     }
 
-    for (let perf of invoice.performances) {
-        volumeCredits = volumeCreditsFor(perf);
+
+    function totalAmount() {
+        let result = 0;
+        for (let perf of invoice.performances) {
+            result += amountFor(perf);
+        }
+        return result;
     }
 
-    result += `총액: ${usd(totalAmount)}\n`;
-    result += `적립포인트: ${volumeCredits}점\n`;
+    function totalVolumeCredits() {
+        let volumeCredits = 0;
+
+        for (let perf of invoice.performances) {
+            volumeCredits = volumeCreditsFor(perf);
+        }
+        return volumeCredits
+
+    }
+    result += `총액: ${usd(totalAmount())}\n`;
+    result += `적립포인트: ${totalVolumeCredits()}점\n`;
     return result
 
 }
@@ -73,4 +83,6 @@ function usd(aNumber) {
             minimumFractionDigits: 2
         }).format(aNumber / 100);
 }
+
+
 console.log(statement(invoice[0], plays))
