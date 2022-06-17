@@ -4,15 +4,15 @@
     "performances": [
       {
         "playID": "hamlet",
-        "audiences": 55
+        "audience": 55
       },
       {
         "playID": "as-like",
-        "audiences": 35
+        "audience": 35
       },
       {
         "playID": "othello",
-        "audiences": 40
+        "audience": 40
       }
     ]
   }
