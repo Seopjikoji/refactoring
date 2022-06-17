@@ -2,23 +2,11 @@ function statement(invoice) {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `청구 내역 (고객명: ${invoice.customer})\n`
-    const format = new Intl.NumberFormat("en-US",
-        {
-            style: "currency", currency: "USD",
-            minimumFractionDigits: 2
-        }).format;
-
 
     for (let perf of invoice.performances) {
 
-        // const play = playFor(perf);
-        // const play = plays[perf.playID]
+        volumeCredits = volumeCreditsFor(perf);
 
-        // let thisAmount = amountFor(perf);
-
-      volumeCredits = volumeCreditsFor(perf);
-
-        //청구 내역을 출력한다.
         result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience}석)}\n`
         totalAmount += amountFor(perf);
     }
@@ -30,8 +18,6 @@ function statement(invoice) {
 }
 const invoice = require("./json/invoices.json")
 const plays = require("./json/plays.json")
-
-// statement(invoice[0], plays)
 
 
 function amountFor(aPerformance) {
@@ -63,19 +49,25 @@ function amountFor(aPerformance) {
 
 }
 
-function playFor(aPerformance){
+function playFor(aPerformance) {
     return plays[aPerformance.playID];
 }
 
-
-function volumeCreditsFor(perf){
+function volumeCreditsFor(perf) {
     let result = 0;
-      //포인트를 적립한다.
-      result += Math.max(perf.audience - 30, 0);
-      //희극 관객 5명마다 추가 포인트를 제공한다.
-      if ("comedy" === playFor(perf).type) 
-      result += Math.floor(perf.audience / 5);
-      return result
+    //포인트를 적립한다.
+    result += Math.max(perf.audience - 30, 0);
+    //희극 관객 5명마다 추가 포인트를 제공한다.
+    if ("comedy" === playFor(perf).type)
+        result += Math.floor(perf.audience / 5);
+    return result
 }
 
+function format(aNumber) {
+    return new Intl.NumberFormat("en-US",
+        {
+            style: "currency", currency: "USD",
+            minimumFractionDigits: 2
+        }).format(aNumber);
+}
 console.log(statement(invoice[0], plays))
