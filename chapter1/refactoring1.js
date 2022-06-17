@@ -11,10 +11,10 @@ function statement(invoice, plays) {
 
     for (let perf of invoice.performances) {
 
-        const play = playFor(perf);
+        // const play = playFor(perf);
         // const play = plays[perf.playID]
 
-        let thisAmount = amountFor(perf, plays);
+        let thisAmount = amountFor(perf, playFor(perf));
 
         //포인트를 적립한다.
         volumeCredits += Math.max(perf.audience - 30, 0);
@@ -59,7 +59,7 @@ function amountFor(aPerformance, play) {
             }
             result += 300 * perf.audience - 20;
             break;
-            
+
         default:
             throw new Error(`알 수 없느 장르: ${play.type}`)
     }
