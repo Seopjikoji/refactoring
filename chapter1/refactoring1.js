@@ -1,4 +1,4 @@
-function statement(invoice, plays) {
+function statement(invoice) {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `청구 내역 (고객명: ${invoice.customer})\n`
@@ -14,7 +14,7 @@ function statement(invoice, plays) {
         // const play = playFor(perf);
         // const play = plays[perf.playID]
 
-        let thisAmount = amountFor(perf, playFor(perf));
+        let thisAmount = amountFor(perf);
 
         //포인트를 적립한다.
         volumeCredits += Math.max(perf.audience - 30, 0);
@@ -39,7 +39,7 @@ console.log(statement(invoice[0], plays)
 )
 
 
-function amountFor(aPerformance, play) {
+function amountFor(aPerformance) {
 
     //변수 변경
     let result = 0;
