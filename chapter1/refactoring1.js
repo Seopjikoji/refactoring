@@ -2,6 +2,8 @@ const invoice = require("./json/invoices.json")
 const plays = require("./json/plays.json")
 
 
+
+//super class
 class PerformanceCalculator {
     constructor(aPerformance, aPlay) {
         this.performances = aPerformance;
@@ -9,42 +11,42 @@ class PerformanceCalculator {
     }
 
     get amount() {
+        throw new Error('서브 클래스에서 처리하도록 설계되었습니다.')
+        // let result = 0;
+        // switch (this.play.type) {
+        //     case "tragedy": //비극
+        //         throw '오류 발생';
+        //         비극 공연료는 TragedyCalculator를 이용하도록 유도
+        //         result = 40000;
+        //         if (this.performances.audience > 30) {
+        //             result += 1000 * (this.performances.audience - 30);
+        //         }
+        //         break;
 
-        //변수 변경
-        let result = 0;
+        //     case "comedy": //희극
+        //         result = 30000;
+        //         if (this.performances.audience > 20) {
+        //             result += 10000 + 500 * (this.performances.audience - 20);
+        //         }
+        //         result += 300 * this.performances.audience - 20;
+        //         break;
 
-        switch (this.play.type) {
-            case "tragedy": //비극
-                result = 40000;
-                if (this.performances.audience > 30) {
-                    result += 1000 * (this.performances.audience - 30);
-                }
-                break;
+        //     default:
+        //         throw new Error(`알 수 없느 장르: ${this.play.type}`)
+        // }
 
-            case "comedy": //희극
-                result = 30000;
-                if (this.performances.audience > 20) {
-                    result += 10000 + 500 * (this.performances.audience - 20);
-                }
-                result += 300 * this.performances.audience - 20;
-                break;
-
-            default:
-                throw new Error(`알 수 없느 장르: ${this.play.type}`)
-        }
-
-        return result
+        // return result
 
     }
 
     get volumeCredits() {
-        let result = 0;
-        //포인트를 적립한다.
-        result += Math.max(this.performances.audience - 30, 0);
-        //희극 관객 5명마다 추가 포인트를 제공한다.
-        if ("comedy" === this.play.type)
-            result += Math.floor(this.performances.audience / 5);
-        return result
+        // let result = 0;
+        // //포인트를 적립한다.
+        // result += Math.max(this.performances.audience - 30, 0);
+        // //희극 관객 5명마다 추가 포인트를 제공한다.
+        // if ("comedy" === this.play.type)
+        //     result += Math.floor(this.performances.audience / 5);
+        return Math.max(this.performances.audience - 30, 0);
     }
 }
 
@@ -61,10 +63,34 @@ function createPerformanceCalculator(aPerformance, aPlay) {
 }
 
 class TragedyCalculator extends PerformanceCalculator {
+    get amount() {
+        let result = 40000;
+        if (this.performances.audience > 30) {
+            result += 1000 * (this.performances.audience - 30);
+        }
+        return result;
+    }
 
 }
 class ComedyCalculator extends PerformanceCalculator {
+    get amount() {
+        let result = 30000;
+        if (this.performances.audience > 20) {
+            result += 10000 + 500 * (this.performances.audience - 20);
+        }
+        result += 300 * this.performances.audience - 20;
+        return result;
+    }
 
+    get volumeCredits() {
+        // let result = 0;
+        // //포인트를 적립한다.
+        // result += Math.max(this.performances.audience - 30, 0);
+        // //희극 관객 5명마다 추가 포인트를 제공한다.
+        // if ("comedy" === this.play.type)
+        //     result += Math.floor(this.performances.audience / 5);
+        return super.volumeCredits + Math.floor(this.performances.audience / 5);
+    }
 }
 
 
