@@ -9,9 +9,15 @@ function statement(invoice, plays) {
 
     function enrichPerformance(aPerformance){
         const result = Object.assign({}, aPerformance)
+        result.play = playFor(result);
         return result;
 
     }
+
+    function playFor(aPerformance) {
+        return plays[aPerformance.playID];
+    }
+
     return renderPlainText(statementData, plays);
 }
 
@@ -20,7 +26,7 @@ function renderPlainText(data, plays){
 
     for (let perf of data.performances) {
 
-        result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)}\n`
+        result += ` ${perf.play.name}: ${usd(amountFor(perf))} (${perf.audience}석)}\n`
     }
 
     result += `총액: ${usd(totalAmount())}\n`;
@@ -54,26 +60,24 @@ function renderPlainText(data, plays){
             }).format(aNumber / 100);
     }
 
-    function volumeCreditsFor(perf) {
+    function volumeCreditsFor(aPerformance) {
         let result = 0;
         //포인트를 적립한다.
-        result += Math.max(perf.audience - 30, 0);
+        result += Math.max(aPerformance.audience - 30, 0);
         //희극 관객 5명마다 추가 포인트를 제공한다.
-        if ("comedy" === playFor(perf).type)
-            result += Math.floor(perf.audience / 5);
+        if ("comedy" === aPerformance.play.type)
+            result += Math.floor(aPerformance.audience / 5);
         return result
     }
 
-    function playFor(aPerformance) {
-        return plays[aPerformance.playID];
-    }
+   
 
     function amountFor(aPerformance) {
 
         //변수 변경
         let result = 0;
 
-        switch (playFor(aPerformance).type) {
+        switch (aPerformance.play.type) {
             case "tragedy": //비극
                 result = 40000;
                 if (aPerformance.audience > 30) {
@@ -90,7 +94,7 @@ function renderPlainText(data, plays){
                 break;
 
             default:
-                throw new Error(`알 수 없느 장르: ${playFor(aPerformance).type}`)
+                throw new Error(`알 수 없느 장르: ${aPerformance.play.type}`)
         }
 
         return result
