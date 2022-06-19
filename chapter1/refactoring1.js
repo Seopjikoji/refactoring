@@ -49,6 +49,25 @@ class PerformanceCalculator {
 }
 
 
+function createPerformanceCalculator(aPerformance, aPlay) {
+    switch (aPlay.type) {
+        case "tragedy": return new TragedyCalculator(aPerformance, aPlay)
+        case "comedy": return new ComedyCalculator(aPerformance, aPlay)
+
+        default:
+            throw new Error(`알 수 없는 장르: ${aPlay.type}`)
+    }
+    // return new PerformanceCalculator(aPerformance, aPlay);
+}
+
+class TragedyCalculator extends PerformanceCalculator {
+
+}
+class ComedyCalculator extends PerformanceCalculator {
+
+}
+
+
 function htmlStatement(invoice, plays) {
     return renderHtml(createStatementData(invoice, plays));
 }
@@ -90,7 +109,7 @@ function createStatementData(invoice, plays) {
     return statementData;
 
     function enrichPerformance(aPerformance) {
-        const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
+        const calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance));
 
         const result = Object.assign({}, aPerformance)
         result.play = calculator.play;
@@ -105,30 +124,30 @@ function createStatementData(invoice, plays) {
 
     function amountFor(aPerformance) {
         return new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;
-    //     //변수 변경
-    //     let result = 0;
+        //     //변수 변경
+        //     let result = 0;
 
-    //     switch (aPerformance.play.type) {
-    //         case "tragedy": //비극
-    //             result = 40000;
-    //             if (aPerformance.audience > 30) {
-    //                 result += 1000 * (aPerformance.audience - 30);
-    //             }
-    //             break;
+        //     switch (aPerformance.play.type) {
+        //         case "tragedy": //비극
+        //             result = 40000;
+        //             if (aPerformance.audience > 30) {
+        //                 result += 1000 * (aPerformance.audience - 30);
+        //             }
+        //             break;
 
-    //         case "comedy": //희극
-    //             result = 30000;
-    //             if (aPerformance.audience > 20) {
-    //                 result += 10000 + 500 * (aPerformance.audience - 20);
-    //             }
-    //             result += 300 * aPerformance.audience - 20;
-    //             break;
+        //         case "comedy": //희극
+        //             result = 30000;
+        //             if (aPerformance.audience > 20) {
+        //                 result += 10000 + 500 * (aPerformance.audience - 20);
+        //             }
+        //             result += 300 * aPerformance.audience - 20;
+        //             break;
 
-    //         default:
-    //             throw new Error(`알 수 없느 장르: ${aPerformance.play.type}`)
-    //     }
+        //         default:
+        //             throw new Error(`알 수 없느 장르: ${aPerformance.play.type}`)
+        //     }
 
-    //     return result
+        //     return result
 
     }
 
